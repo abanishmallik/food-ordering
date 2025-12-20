@@ -17,13 +17,15 @@
                 <h1>FoodLab</h1>
             </div>
             <div class="input">
-                <input type="text" value="" id="inp" placeholder="Search Here ..." onkeyup="myFun()">
-                <i class="fa-solid fa-magnifying-glass"></i>
+                <!-- improved accessibility for search -->
+                <input type="text" value="" id="inp" placeholder="Search Here ..." aria-label="Search foods" onkeyup="myFun()">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
             </div>
             <div class="icon">
-                <i onclick="login()" class="fa-solid fa-user"></i>
-                <i class="fa-solid fa-cart-shopping"></i>
-                <i onclick="nav()" class="fa-solid fa-bars"></i>
+                <i onclick="login()" class="fa-solid fa-user" aria-label="Open login"></i>
+                <!-- cart with badge -->
+                <i id="cart-btn" class="fa-solid fa-cart-shopping" aria-label="Cart" onclick="openCart()"> <span id="cart-count" class="cart-count" aria-live="polite">0</span></i>
+                <i onclick="nav()" class="fa-solid fa-bars" aria-label="Toggle navigation"></i>
             </div>
         </nav>
         <!--slider part -->
@@ -36,19 +38,19 @@
               <input type="radio" name="r" id="r4">
               <input type="radio" name="r" id="r5">
               <div class="slide s1">
-                <img src="bur+fri.jpg" alt="">
+                <img src="bur+fri.jpg" alt="Burger and fries">
               </div>
               <div class="slide">
-                <img src="item2.jpg" alt="">
+                <img src="item2.jpg" alt="Food item">
               </div>
               <div class="slide">
-                <img src="item3.jpg" alt="">
+                <img src="item3.jpg" alt="Food item">
               </div>
               <div class="slide">
-                <img src="mixed.jpg" alt="">
+                <img src="mixed.jpg" alt="Mixed platter">
               </div>
               <div class="slide">
-                <img src="cakeee.jpg" alt="">
+                <img src="cakeee.jpg" alt="Cake dessert">
               </div>
             </div>
       
@@ -62,18 +64,23 @@
           </div>
 
 
-        <div class="login">
-            <h2>Log In </h2>
-            <input type="text" placeholder="Enter Your Name">
-            <input type="password" placeholder="Enter Password"> <br>
-            <button>Log In</button>
+        <!-- login modal (was simple .login) -->
+        <div id="loginModal" class="login modal" aria-hidden="true" role="dialog" aria-labelledby="loginTitle">
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeLogin()" aria-label="Close login">&times;</button>
+                <h2 id="loginTitle">Log In</h2>
+                <input id="login-name" type="text" placeholder="Enter Your Name" aria-label="Name">
+                <input id="login-pass" type="password" placeholder="Enter Password" aria-label="Password"> <br>
+                <button id="login-submit">Log In</button>
 
+            </div>
         </div>
-        <div class="nav">
-            <p>Home</p>
-            <p>Foods</p>
-            <p>Blog</p>
-            <p>Customer</p>
+
+        <div class="nav" id="main-nav">
+            <p tabindex="0">Home</p>
+            <p tabindex="0">Foods</p>
+            <p tabindex="0">Blog</p>
+            <p tabindex="0">Customer</p>
 
 
         </div>
@@ -84,9 +91,49 @@
             <div class="text">
                 <h1>Simple & Tasty Recipes</h1>
                 <p>online food and delivery webpages offer a convenient and convenient way for customers to order and receive food from their favorite restaurants.</p>
-                <button>Explore More</button>
+                <button id="explore-btn" aria-controls="beverage-section" aria-expanded="false">Explore More</button>
             </div>
-            <img src="burgerrr.jpg" alt="">
+            <img src="burgerrr.jpg" alt="Burger">
+        </div>
+        <!-- beverage section inserted: hidden by default, populated by JS on Explore More -->
+        <div id="beverage-section" style="display:none; margin:20px 0;">
+            <div class="head">
+                <h1>Our <span>Beverages</span></h1>
+            </div>
+            <div class="crd" id="beverage-list">
+                <!-- beverage cards will be injected here -->
+                <div class="card" data-search="mango lassi" role="article">
+                    <img src="mango lassi.jpg" alt="Mango Lassi">
+                    <h2>₹89</h2>
+                    <p>Mango Lassi</p>
+                    <button onclick="addToCart(this)" data-name="Mango Lassi" data-price="89">Order Now</button>
+                </div>
+                <div class="card" data-search="cold coffee" role="article">
+                    <img src="cold coffee.png" alt="Cold Coffee">
+                    <h2>₹149</h2>
+                    <p>Cold Coffee</p>
+                    <button onclick="addToCart(this)" data-name="Cold Coffee" data-price="149">Order Now</button>
+                </div>
+                <div class="card" data-search="fresh lemonade" role="article">
+                    <img src="fresh lemonade.png" alt="Fresh Lemonade">
+                    <h2>₹99</h2>
+                    <p>Fresh Lemonade</p>
+                    <button onclick="addToCart(this)" data-name="Fresh Lemonade" data-price="99">Order Now</button>
+                </div>
+                <div class="card" data-search="mojito" role="article">
+                    <img src="mocaccino.jpg" alt="Mocaccino">
+                    <h2>₹119</h2>
+                    <p>Mocaccino</p>
+                    <button onclick="addToCart(this)" data-name="Mocaccino" data-price="119">Order Now</button>
+                </div>
+                <div class="card" data-search="mojito" role="article">
+                    <img src="mojito.png" alt="Mojito">
+                    <h2>₹159</h2>
+                    <p>Mojito</p>
+            
+                    <button onclick="addToCart(this)" data-name="Mojito" data-price="159">Order Now</button>
+                </div>
+            </div>
         </div>
     
        
@@ -95,49 +142,49 @@
 
         <table>
             <tr>
-                <td>
+                <td id="food-list">
                     <div class="head">
                         <h1>Our <span>Foods</span></h1>
                     </div>
                     <div class="crd">
-                        <div class="card">
-                            <img src="fds (1).jpg" alt="">
+                        <div class="card" data-search="basket chaat" role="article">
+                            <img src="fds (1).jpg" alt="Basket chaat">
                             <h2>₹299 </h2>
                             <p>Basket chaat</p>
-                            <button>Order Now</button>
+                            <button onclick="addToCart(this)" data-name="Basket chaat" data-price="299">Order Now</button>
                         </div>
-                        <div class="card">
-                            <img src="burger2324.jpg" alt="please wait">
+                        <div class="card" data-search="crispy burger" role="article">
+                            <img src="burger2324.jpg" alt="Crispy Burger">
                             <h2>₹199 </h2>
                             <p>Crispy Burger</p>
-                            <button>Order Now</button>
+                            <button onclick="addToCart(this)" data-name="Crispy Burger" data-price="199">Order Now</button>
                         </div>
-                        <div class="card">
-                            <img src="fds (7).jpg" alt="please wait">
+                        <div class="card" data-search="delicious chicken" role="article">
+                            <img src="fds (7).jpg" alt="Delicious Chicken">
                             <h2>₹99 onward's</h2>
-                            <p>Dilicious Chicken</p>
-                            <button>Order Now</button>
+                            <p>Delicious Chicken</p>
+                            <button onclick="addToCart(this)" data-name="Delicious Chicken" data-price="99">Order Now</button>
                         </div>
                     </div>
 
                     <div class="crd">
-                        <div class="card">
-                            <img src="fds (4).jpg" alt="">
+                        <div class="card" data-search="burgers" role="article">
+                            <img src="fds (4).jpg" alt="Burgers">
                             <h2>₹99 </h2>
                             <p>Burgers</p>
-                            <button>Order Now</button>
+                            <button onclick="addToCart(this)" data-name="Burgers" data-price="99">Order Now</button>
                         </div>
-                        <div class="card">
-                            <img src="fds (5).jpg" alt="">
+                        <div class="card" data-search="cake" role="article">
+                            <img src="fds (5).jpg" alt="Cake">
                             <h2>₹399 </h2>
                             <p>Cake</p>
-                            <button>Order Now</button>
+                            <button onclick="addToCart(this)" data-name="Cake" data-price="399">Order Now</button>
                         </div>
-                        <div class="card">
-                            <img src="fds (6).jpg" alt="">
+                        <div class="card" data-search="dum biryani" role="article">
+                            <img src="fds (6).jpg" alt="Dum Biryani">
                             <h2>₹199</h2>
                             <p>Dum Biryani</p>
-                            <button>Order Now</button>
+                            <button onclick="addToCart(this)" data-name="Dum Biryani" data-price="199">Order Now</button>
                         </div>
                     </div>
                 </td>
@@ -151,21 +198,21 @@
                         <h1>Our <span>Blogs</span></h1>
                     </div>
                     <div class="crd">
-                        <div class="blog">
-                            <img src="fds (6).jpg" alt="">
+                        <div class="blog" data-search="facts about indian food">
+                            <img src="fds (6).jpg" alt="Indian food">
                             <h2>Fact About Indian Food</h2>
                             <p></p>
                             <a href="https://www.littleindiaofdenver.com/blog/7-facts-you-never-knew-about-indian-food/">Read More</a>
                         </div>
-                        <div class="blog">
-                            <img src="fds (4).jpg" alt="">
-                            <h2>Diffrent Type of Burger</h2>
+                        <div class="blog" data-search="different types of burger">
+                            <img src="fds (4).jpg" alt="Burgers">
+                            <h2>Different Type of Burger</h2>
                             <p></p>
                             <a href="https://www.finedininglovers.com/article/burger-types-famous-to-make">Read More</a>
                         </div>
-                        <div class="blog">
-                            <img src="fds (7).jpg" alt="">
-                            <h2>Delicious Checken Recipes</h2>
+                        <div class="blog" data-search="chicken recipes">
+                            <img src="fds (7).jpg" alt="Chicken">
+                            <h2>Delicious Chicken Recipes</h2>
                             <p></p>
                             <a href="https://themodernproper.com/60-best-chicken-breast-recipes">Read More</a>
                         </div>
@@ -182,35 +229,35 @@
         </div>
         <div class="review">
 
-            <div class="customer">
-                <img src="menn1.jpg" alt=""> <br>
+            <div class="customer active">
+                <img src="menn1.jpg" alt="Customer 1"> <br>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-regular fa-star-half-stroke"></i>
-                <p>The food is jsut awesome, loved it</p>
-                
+                <p>The food is just awesome, loved it</p>
+
             </div>
             <div class="customer">
-                <img src="men2.jpg" alt=""> <br>
+                <img src="men2.jpg" alt="Customer 2"> <br>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-regular fa-star-half-stroke"></i>
                 <p>Amazing food and the delivery was too good and on the timing, Yahooo!!</p>
-                
+
             </div>
             <div class="customer">
-                <img src="men3.jpg" alt=""> <br>
+                <img src="men3.jpg" alt="Customer 3"> <br>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-regular fa-star-half-stroke"></i>
                 <p>Although taste is good but can we improved(Average)</p> 
-                
+
             </div>
 
             
