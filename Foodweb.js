@@ -201,3 +201,41 @@ document.addEventListener('DOMContentLoaded', ()=>{
     });
   });
 })();
+
+// Show beverage details modal
+function showDetails(name) {
+  const details = {
+    'Mango Lassi': {
+      quantity: '300ml glass',
+      desc: 'A refreshing yogurt-based drink blended with ripe mangoes, sugar, and a hint of cardamom. Perfect for cooling off on a hot day!'
+    },
+    'Cold Coffee': {
+      quantity: '350ml glass',
+      desc: 'Chilled coffee blended with milk, sugar, and ice, topped with a scoop of vanilla ice cream. A classic summer beverage for coffee lovers.'
+    },
+    'Fresh Lemonade': {
+      quantity: '300ml glass',
+      desc: 'Freshly squeezed lemons, sugar, and a dash of salt served over ice. The ultimate thirst-quencher!'
+    },
+    'Mocaccino': {
+      quantity: '250ml cup',
+      desc: 'A rich blend of espresso, steamed milk, and chocolate syrup, topped with whipped cream. A treat for chocolate and coffee fans.'
+    },
+    'Mojito': {
+      quantity: '350ml glass',
+      desc: 'A zesty mocktail with fresh mint, lime, sugar, and soda. Cool, fizzy, and full of flavor!'
+    },
+    'Frappe': {
+      quantity: '350ml glass',
+      desc: 'A frothy, chilled coffee drink made with instant coffee, sugar, milk, and ice. Creamy and energizing!'
+    }
+  };
+  const info = details[name] || {quantity:'',desc:'No details available.'};
+  document.getElementById('details-title').textContent = name;
+  document.getElementById('details-desc').innerHTML =
+    `<b>Quantity:</b> ${info.quantity}<br><b>Description:</b> ${info.desc}`;
+  document.getElementById('details-modal').style.display = 'block';
+}
+function closeDetails() {
+  document.getElementById('details-modal').style.display = 'none';
+}
